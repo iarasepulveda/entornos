@@ -1,5 +1,4 @@
 import oscP5.*;
-import netP5.*;
 
 OscP5 oscP5;
 NetAddress unityAddr;
@@ -11,11 +10,18 @@ void setupUnityOSC() {
 
 // Nueva función en Processing
 void enviarPincelAUnity() {
-  // 'pincel' es la variable que ya tienen y que sigue al blob
   if (pincel != null) {
+
+    float normX = pincel.x / float(width);
+    float normY = pincel.y / float(height);
+
+    // IMPORTANTE: Unity y Processing tienen el eje Y invertido
+    normY = 1.0 - normY;
+
     OscMessage msg = new OscMessage("/pincel/pos");
-    msg.add(pincel.x); // Envía la coordenada X del pincel en píxeles
-    msg.add(pincel.y); // Envía la coordenada Y del pincel en píxeles
+    msg.add(normX);
+    msg.add(normY);
+
     oscP5.send(msg, unityAddr);
   }
 }
